@@ -1,13 +1,12 @@
-//
-//  ViewController.h
-//  ABC
-//
-//  Created by Jeremy Hidajat on 3/9/2014.
-//  Copyright (c) 2014 Jerry. All rights reserved.
-//
-
 #import <UIKit/UIKit.h>
 
-@interface ViewController : UIViewController < UITableViewDataSource, UITableViewDelegate >
+@interface ViewController: UIViewController
+
+@property (nonatomic) NSMutableArray *fib;  // no longer needs to be defined in implementation
+- (void) viewDidLoad;
+- (void) didReceiveMemoryWarning;
+- (NSString *) tableView: (UITableView *) tableView titleForHeaderInSection: (NSInteger) section;
+- (NSInteger) tableView: (UITableView *) tableView numberOfRowsInSection: (NSInteger) section;
+- (UITableViewCell *) tableView: (UITableView *) tableView cellForRowAtIndexPath: (NSIndexPath *) indexPath;
 
 @end

@@ -1,73 +1,49 @@
-//
-//  ViewController.m
-//  ABC
-//
-//  Created by Jeremy Hidajat on 3/9/2014.
-//  Copyright (c) 2014 Jerry. All rights reserved.
-//
-
 #import "ViewController.h"
 
-@interface ViewController ()
-
-@end
-
 @implementation ViewController
-{
-    NSArray *fibTerms;
+
+static NSMutableArray *fib; // this instance variable implements the property
+
+- (void) viewDidLoad {
+	[super viewDidLoad];
+	
+	fib = [NSMutableArray.alloc init];
+	[fib addObject: [NSNumber numberWithUnsignedInt: 0]];
+	[fib addObject: [NSNumber numberWithUnsignedInt: 1]];
+	
+	unsigned int twoAgo = 0, oneAgo = 1, current;
+	
+	do {
+		current = oneAgo + twoAgo;
+		[fib addObject: [NSNumber numberWithUnsignedInt: current]];
+		twoAgo = oneAgo, oneAgo = current;
+	} while (oneAgo <= UINT_MAX - twoAgo);
 }
 
--(void)fibSe{
-    NSMutableArray *fib = [[NSMutableArray alloc] init];
-    [fib addObject: [NSString stringWithFormat:@"1"]];
-    unsigned int oneAgo = 1, twoAgo = 0, current;
-    do {
-        current = oneAgo + twoAgo;
-        [fib addObject:[NSString stringWithFormat:@"%d", current]];
-        twoAgo = oneAgo, oneAgo = current;
-        
-    } while (oneAgo <= UINT_MAX - twoAgo);
+- (void) didReceiveMemoryWarning {
+	[super didReceiveMemoryWarning];
 }
 
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-
-    NSMutableArray *fib = [[NSMutableArray alloc] init];
-    [fib addObject: [NSString stringWithFormat:@"1"]];
-    unsigned int oneAgo = 1, twoAgo = 0, current;
-    do {
-        current = oneAgo + twoAgo;
-        [fib addObject:[NSString stringWithFormat:@"%d", current]];
-        twoAgo = oneAgo, oneAgo = current;
-    } while (twoAgo <= UINT_MAX - current - oneAgo);
-    
-    fibTerms = [NSArray arrayWithArray: fib];
+- (NSString *) tableView: (UITableView *) tableView titleForHeaderInSection: (NSInteger) section {
+	return [NSString stringWithFormat: @"Fibonacci numbers under %u", UINT_MAX];
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-    return [fibTerms count];
+- (NSInteger) tableView: (UITableView *) tableView numberOfRowsInSection: (NSInteger) section {
+	return fib.count;
 }
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    static NSString *simpleTableIdentifier = @"SimpleTableCell";
-    
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:simpleTableIdentifier];
-    
-    if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:simpleTableIdentifier];
-    }
-    
-    cell.textLabel.text = [fibTerms objectAtIndex:indexPath.row];
-    return cell;
+- (UITableViewCell *) tableView: (UITableView *) tableView cellForRowAtIndexPath: (NSIndexPath *) indexPath {
+	UITableViewCell *cell = UITableViewCell.alloc;
+	cell = [cell initWithStyle: UITableViewCellStyleSubtitle reuseIdentifier: @"SimpleTableCell"];
+	cell.textLabel.text = [[fib objectAtIndex: indexPath.row] stringValue];
+	
+	NSString *ordinal = @"th";
+	if (indexPath.row / 10 != 1 && indexPath.row % 10 <= 3 && indexPath.row > 0)
+		ordinal = indexPath.row % 10 == 1 ? @"st" : indexPath.row % 10 == 2 ? @"nd" : @"rd";
+	
+	cell.detailTextLabel.text = [NSString stringWithFormat: @"%u%@", (unsigned) indexPath.row, ordinal];
+	
+	return cell;
 }
 
 @end
